@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
-function Zip(props) {
+function City(props) {
 
     const [validationError, setValidationError] = useState(null);
 
     const validate = (event) => {
-        const zipCodePattern = /[a-z]+/i;
-        const valid = zipCodePattern.test(event.target.value);
+        const cityCodePattern = /[a-z]+/i;
+        const valid = cityCodePattern.test(event.target.value);
         if (!valid) {
             setValidationError('* should be a valid city name');
             props.clearResponse();
         } else {
             setValidationError('');
-            props.onZipChange(event.target.value);
+            props.onCityChange(event.target.value);
         }
     };
 
@@ -30,7 +30,7 @@ function Zip(props) {
                         type="text" 
                         className="form-control" 
                         id="usr" 
-                        placeholder="NZ Zip Code (4 digit)"
+                        placeholder="NZ City Name"
                         onKeyPress={(event) => {
                             if (event.key === "Enter") {
                                 validate(event);
@@ -46,4 +46,4 @@ function Zip(props) {
     );
 }
 
-export default Zip
+export default City
