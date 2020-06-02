@@ -3,7 +3,7 @@ import React from 'react';
 function MapContainer(props) {
 	var map;
 	var places;
-	const nz = {lat: -41.0723336, lng: 171.5579181};
+	const nz = { lat: -41.0723336, lng: 171.5579181 };
 
 	// Create the script tag, set the appropriate attributes
 	var script = document.createElement('script');
@@ -12,35 +12,34 @@ function MapContainer(props) {
 	script.async = true;
 
 	// Attach your callback function to the `window` object
-	window.initMap = function() {
+	window.initMap = function () {
 		map = new this.window.google.maps.Map(document.getElementById('map'), {
 			zoom: 5,
 			center: nz,
 		});
 		places = new this.window.google.maps.places.PlacesService(map);
 
-		if(props.responseData === null || props.responseData === '' || props.responseData.cod !== 200) {
-			var markers = [];
-			let req = {
-				query: 'new zealand city',
-				fields: ['name', 'geometry'],
-			};
+		let req = {
+			query: 'new zealand city',
+			fields: ['name', 'geometry'],
+		};
 
-			places.findPlaceFromQuery(req, (results, status) => {
-				for (var i = 0; i < results.length; i++) {
-					markers.push(new this.window.google.maps.Marker({position: results[i].geometry.location, map: map}));
-				}
-			});
-		}
-		else if (props.responseData.cod === 200) {
-			var markers = [];
+		places.findPlaceFromQuery(req, (results, status) => {
+			for (var i = 0; i < results.length; i++) {
+				let marker = new this.window.google.maps.Marker({ position: results[i].geometry.location, map: map, title: results[i].name });
+				marker.addListener('click', () => {
+					props.onCityChange(marker.title);
+				})
+			}
+		});
+		
+		if (props.responseData.cod === 200) {
 			let req = {
 				query: props.responseData.name,
 				fields: ['name', 'geometry'],
 			};
 
 			places.findPlaceFromQuery(req, (results, status) => {
-				markers.push(new this.window.google.maps.Marker({position: results[0].geometry.location, map: map}));
 				map.panTo(results[0].geometry.location);
 				map.setZoom(10);
 			});
