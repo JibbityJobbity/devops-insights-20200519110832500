@@ -19,7 +19,7 @@ function MapContainer(props) {
 		});
 		places = new this.window.google.maps.places.PlacesService(map);
 
-		if(props.responseData === null || props.responseData === '') {
+		if(props.responseData === null || props.responseData === '' || props.responseData.cod !== 200) {
 			var markers = [];
 			let req = {
 				query: 'new zealand city',
@@ -33,7 +33,17 @@ function MapContainer(props) {
 			});
 		}
 		else if (props.responseData.cod === 200) {
+			var markers = [];
+			let req = {
+				query: props.responseData.name,
+				fields: ['name', 'geometry'],
+			};
 
+			places.findPlaceFromQuery(req, (results, status) => {
+				markers.push(new this.window.google.maps.Marker({position: results[0].geometry.location, map: map}));
+				map.panTo(results[0].geometry.location);
+				map.setZoom(10);
+			});
 		}
 	};
 
