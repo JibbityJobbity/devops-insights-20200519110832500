@@ -1,8 +1,9 @@
 import React from 'react';
 
-function MapContainer() {
+function MapContainer(props) {
 	var map;
 	var places;
+	const nz = {lat: -41.0723336, lng: 171.5579181};
 
 	// Create the script tag, set the appropriate attributes
 	var script = document.createElement('script');
@@ -14,9 +15,26 @@ function MapContainer() {
 	window.initMap = function() {
 		map = new this.window.google.maps.Map(document.getElementById('map'), {
 			zoom: 5,
-			center: {lat: -41.0723336, lng: 171.5579181}
+			center: nz,
 		});
 		places = new this.window.google.maps.places.PlacesService(map);
+
+		if(props.responseData === null || props.responseData === '') {
+			var markers = [];
+			let req = {
+				query: 'new zealand city',
+				fields: ['name', 'geometry'],
+			};
+
+			places.findPlaceFromQuery(req, (results, status) => {
+				for (var i = 0; i < results.length; i++) {
+					markers.push(new this.window.google.maps.Marker({position: results[i].geometry.location, map: map}));
+				}
+			});
+		}
+		else if (props.responseData.cod === 200) {
+
+		}
 	};
 
 	// Append the 'script' element to 'head'
