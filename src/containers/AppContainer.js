@@ -29,7 +29,7 @@ function AppContainer(props) {
             </div>
             <div className="row mt-8">
                 <div className="col-sm-2"></div>
-                <MapContainer responseData={responseData}/>
+                <MapContainer onCityChange={handleCityChange} responseData={responseData}/>
                 <div className="col-sm-2"></div>
             </div>
             <div className="row mt-4">
